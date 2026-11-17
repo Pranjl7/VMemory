@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard.jsx'
 import VirtualMachines from './pages/VirtualMachines.jsx'
 import Simulator from './pages/Simulator.jsx'
 import Analytics from './pages/Analytics.jsx'
+import Landing from './pages/Landing.jsx'
 
 const PAGES = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, component: Dashboard },
@@ -14,7 +15,11 @@ const PAGES = [
   { id: 'allocate', label: 'Memory Allocation', icon: HardDrive, component: Simulator },
   { id: 'analytics', label: 'Analytics & OS Concepts', icon: BarChart3, component: Analytics },
 ]
-const pageFromHash = () => PAGES.find((p) => `#/${p.id}` === window.location.hash)?.id || 'dashboard'
+const pageFromHash = () => {
+  const hash = window.location.hash
+  if (!hash || hash === '#' || hash === '#/' || hash === '#/home') return 'home'
+  return PAGES.find((p) => `#/${p.id}` === hash)?.id || 'dashboard'
+}
 
 export default function App() {
   const [page, setPage] = useState(pageFromHash)
@@ -63,7 +68,10 @@ export default function App() {
   const go = (id) => {
     window.location.hash = `/${id}`
     setNavOpen(false)
+    window.scrollTo(0, 0)
   }
+
+  if (page === 'home') return <Landing go={go} />
 
   if (!data) {
     return (
@@ -81,14 +89,14 @@ export default function App() {
   return (
     <div className="min-h-screen lg:pl-64">
       <aside className={`fixed inset-y-0 left-0 z-30 flex w-64 flex-col border-r border-line bg-white transition-transform lg:translate-x-0 ${navOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex items-center gap-3 px-5 py-5">
+        <a href="#/" title="Back to the landing page" className="flex items-center gap-3 px-5 py-5">
           <span className="grid size-9 place-items-center rounded-xl bg-accent text-white"><HardDrive className="size-5" /></span>
           <div className="leading-tight">
             <div className="font-semibold text-ink">VMemory</div>
             <div className="text-xs text-muted">VM Memory Simulator</div>
           </div>
-          <button className="ml-auto lg:hidden" onClick={() => setNavOpen(false)} aria-label="Close menu"><X className="size-5" /></button>
-        </div>
+        </a>
+        <button className="absolute right-4 top-6 lg:hidden" onClick={() => setNavOpen(false)} aria-label="Close menu"><X className="size-5" /></button>
         <nav className="flex-1 space-y-1 px-3">
           {PAGES.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => go(id)}

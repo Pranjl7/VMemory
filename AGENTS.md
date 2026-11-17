@@ -10,7 +10,7 @@
 - `netlify/server/store.mjs` is the DB access layer (native `@netlify/database` driver, raw SQL). It seeds the demo configuration on the first request.
 - `netlify/database/migrations/` holds hand-written SQL migrations. Never edit an applied migration; add a new numbered file instead.
 - `src/api.js` provides the `remote` backend (API) and `local` backend (localStorage fallback, flagged `persisted: false` and shown with a warning banner).
-- `src/App.jsx` contains the layout, sidebar, hash routing (`#/dashboard`, `#/vms`, `#/allocate`, `#/analytics`), toasts and the `act()` helper that pages use for all operations.
+- `src/App.jsx` contains the layout, sidebar, hash routing (`#/` landing page in `src/pages/Landing.jsx`, then `#/dashboard`, `#/vms`, `#/allocate`, `#/analytics`), toasts and the `act()` helper that pages use for all operations.
 - `src/pages/` holds the four sections. `src/components/` holds the shared UI (`ui.jsx`), `MemoryMap.jsx` (the RAM bar), the charts and the activity list.
 
 ## Conventions
