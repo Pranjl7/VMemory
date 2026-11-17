@@ -1,0 +1,20 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --color-ink: #0f1b3d;
+  --color-muted: #5b6785;
+  --color-line: #e4e8f0;
+  --color-canvas: #f6f7fb;
+  --color-accent: #4f46e5;
+}
+
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+}
+
+.free-stripes {
+  background-color: #f1f4f9;
+  background-image: repeating-linear-gradient(-45deg, transparent 0 6px, #e3e8f1 6px 7px);
+}
