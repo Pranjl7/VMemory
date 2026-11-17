@@ -2,6 +2,8 @@
 
 **Live demo:** [https://vmemory.netlify.app](https://vmemory.netlify.app)
 
+![VMemory landing page](docs/landing.png)
+
 ![VMemory dashboard](docs/dashboard.png)
 
 An educational Operating Systems simulator showing how a host computer shares its limited physical RAM (1024 MB) between virtual machines. You can create VMs, allocate and release memory with **First Fit**, **Best Fit** and **Worst Fit**, and watch the physical memory map, utilization and fragmentation update. It does not control a real hypervisor.
