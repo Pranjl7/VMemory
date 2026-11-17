@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { BarChart3, Cpu, Database, HardDrive, LayoutDashboard, Loader2, Menu, RotateCcw, Sparkles, TriangleAlert, X } from 'lucide-react'
+import { BarChart3, Cpu, Database, HardDrive, House, LayoutDashboard, Loader2, Menu, RotateCcw, Sparkles, TriangleAlert, X } from 'lucide-react'
 import { connect } from './api.js'
 import { computeStats } from '../shared/stats.js'
 import { Button } from './components/ui.jsx'
@@ -18,7 +18,7 @@ const PAGES = [
 const pageFromHash = () => {
   const hash = window.location.hash
   if (!hash || hash === '#' || hash === '#/' || hash === '#/home') return 'home'
-  return PAGES.find((p) => `#/${p.id}` === hash)?.id || 'dashboard'
+  return PAGES.find((p) => `#/${p.id}` === hash)?.id || 'home'
 }
 
 export default function App() {
@@ -30,14 +30,22 @@ export default function App() {
   const [navOpen, setNavOpen] = useState(false)
 
   useEffect(() => {
-    connect().then(({ backend, data }) => {
-      setBackend(backend)
-      setData(data)
-    })
     const onHash = () => setPage(pageFromHash())
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
+
+  const inSimulator = page !== 'home'
+  useEffect(() => {
+    if (!inSimulator || backend) return
+    let active = true
+    connect().then(({ backend, data }) => {
+      if (!active) return
+      setBackend(backend)
+      setData(data)
+    })
+    return () => { active = false }
+  }, [inSimulator, backend])
 
   useEffect(() => {
     if (!toast) return
@@ -66,7 +74,7 @@ export default function App() {
   )
 
   const go = (id) => {
-    window.location.hash = `/${id}`
+    window.location.hash = id === 'home' ? '/' : `/${id}`
     setNavOpen(false)
     window.scrollTo(0, 0)
   }
@@ -98,8 +106,13 @@ export default function App() {
         </a>
         <button className="absolute right-4 top-6 lg:hidden" onClick={() => setNavOpen(false)} aria-label="Close menu"><X className="size-5" /></button>
         <nav className="flex-1 space-y-1 px-3">
+          <a href="#/" onClick={() => { setNavOpen(false); window.scrollTo(0, 0) }}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-slate-50 hover:text-ink">
+            <House className="size-4" /> Home
+          </a>
           {PAGES.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => go(id)}
+              aria-current={page === id ? 'page' : undefined}
               className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${page === id ? 'bg-indigo-50 text-accent' : 'text-muted hover:bg-slate-50 hover:text-ink'}`}>
               <Icon className="size-4" /> {label}
             </button>
