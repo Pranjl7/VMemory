@@ -61,7 +61,9 @@ const local = {
 // Try the database API first; fall back to the local demo only if the API cannot be reached.
 export async function connect() {
   try {
-    return { backend: remote, data: await remote.status() }
+    const data = await remote.status()
+    if (!data?.state) throw new Error('Unexpected API response')
+    return { backend: remote, data }
   } catch (err) {
     console.warn('API unavailable, using local demo mode:', err.message)
     return { backend: local, data: await local.status() }
